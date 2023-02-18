@@ -3,17 +3,23 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
-  Card,
-  CardContent,
-  CardHeader,
   Container,
   Grid,
   TextField,
   Typography,
-  Box,
   Stack,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import axiosInstance from "../axiosInstance";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import SaveIcon from "@mui/icons-material/Save";
+import { Save } from "@mui/icons-material";
 
 function Settings() {
   const navigate = useNavigate();
@@ -23,6 +29,14 @@ function Settings() {
     mode: false,
   });
 
+  const [addProperty, setAddProperty] = useState({
+    category: "",
+    mode: false,
+    precedent: "",
+    key: "",
+    value: "",
+  });
+
   useEffect(() => {
     fetchSettings();
   }, []);
@@ -30,13 +44,11 @@ function Settings() {
   const fetchSettings = async () => {
     const response = await axiosInstance.get("/settings");
     setSettings(response.data.settings);
-    console.log(response.data.settings);
   };
 
-  const handleCategorySave = (category, data) => {
+  const handleCategorySave = (data) => {
     try {
       const response = axiosInstance.put("/settings/update", {
-        category,
         data,
       });
       console.log(response);
@@ -45,6 +57,30 @@ function Settings() {
         category: "",
         mode: false,
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleAddNewProperty = () => {
+    console.log(addProperty);
+    try {
+      const response = axiosInstance.put("/settings/add-property", {
+        key: addProperty.key,
+        value: addProperty.value,
+        precedent: addProperty.precedent,
+      });
+      console.log(response);
+
+      setAddProperty({
+        category: "",
+        mode: false,
+        precedent: "",
+        key: "",
+        value: "",
+      });
+
+      fetchSettings();
     } catch (error) {
       console.log(error);
     }
@@ -63,7 +99,7 @@ function Settings() {
                     <Button
                       variant="contained"
                       onClick={() => {
-                        handleCategorySave(key, settings[key]);
+                        handleCategorySave(settings[key]);
                       }}
                     >
                       Save
@@ -82,6 +118,20 @@ function Settings() {
                       ? "Cancel"
                       : "Edit"}
                   </Button>
+                  {!editMode.mode && (
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        setAddProperty({
+                          category: key,
+                          mode: !addProperty.mode,
+                          precedent: Object.keys(settings[key]).pop(),
+                        });
+                      }}
+                    >
+                      Add
+                    </Button>
+                  )}
                 </Stack>
               </Stack>
             </Grid>
@@ -151,6 +201,74 @@ function Settings() {
           </Grid>
         </Grid>
       </Grid>
+      <Dialog
+        open={addProperty.mode}
+        onClose={() => {
+          setAddProperty({
+            category: "",
+            mode: false,
+          });
+        }}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Add a new property</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To add a new property, please enter the property name and value
+            here.
+          </DialogContentText>
+          <TextField
+            margin="dense"
+            id="name"
+            label="Property Name"
+            type="text"
+            fullWidth
+            value={addProperty.key || ""}
+            onChange={(e) => {
+              setAddProperty({
+                ...addProperty,
+                key: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            margin="dense"
+            id="value"
+            label="Property Value"
+            type="text"
+            fullWidth
+            value={addProperty.value || ""}
+            onChange={(e) => {
+              setAddProperty({
+                ...addProperty,
+                value: e.target.value,
+              });
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setAddProperty({
+                category: "",
+                mode: false,
+                precedent: "",
+                key: "",
+                value: "",
+              });
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              handleAddNewProperty();
+            }}
+          >
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }
