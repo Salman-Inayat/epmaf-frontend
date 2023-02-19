@@ -15,16 +15,32 @@ import {
   TextField,
   InputAdornment,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 import { Delete } from "@mui/icons-material";
+import { Edit } from "@mui/icons-material";
 
 function Processes() {
+  const navigate = useNavigate();
+
   const [processes, setProcesses] = useState([]);
 
   const [addProcess, setAddProcess] = useState({
     open: false,
     title: "",
     error: "",
+  });
+
+  const [editProcess, setEditProcess] = useState({
+    open: false,
+    oldTitle: "",
+    newTitle: "",
+    error: "",
+  });
+
+  const [deleteProcess, setDeleteProcess] = useState({
+    open: false,
+    title: "",
   });
 
   useEffect(() => {
@@ -56,6 +72,26 @@ function Processes() {
       setAddProcess({
         ...addProcess,
         title: newValue,
+        error: "",
+      });
+    }
+  };
+
+  const handleEditProcessNameChange = (value) => {
+    let newValue = value.replace(" ", "_");
+
+    // the process name should not exceed 56 characters
+    if (newValue.length > 56) {
+      setEditProcess({
+        ...editProcess,
+        newTitle: newValue.slice(0, 56),
+        error: "Process name should not exceed 56 characters",
+      });
+      return;
+    } else {
+      setEditProcess({
+        ...editProcess,
+        newTitle: newValue,
         error: "",
       });
     }
@@ -119,6 +155,39 @@ function Processes() {
     }
   };
 
+  const handleProcessEdit = async () => {
+    console.log(editProcess);
+    let newProcess = `${editProcess.oldTitle.split("_")[0]}_${
+      editProcess.newTitle
+    }`;
+
+    // if the new process starts or ends with an underscore, remove it
+    if (newProcess.startsWith("_")) {
+      newProcess = newProcess.slice(1);
+    }
+
+    if (newProcess.endsWith("_")) {
+      newProcess = newProcess.slice(0, -1);
+    }
+
+    try {
+      await axiosInstance.post("process-maintenance/edit-process", {
+        oldTitle: editProcess.oldTitle,
+        newTitle: newProcess,
+      });
+
+      fetchProcesses();
+      setEditProcess({
+        open: false,
+        oldTitle: "",
+        newTitle: "",
+        error: "",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleProcessDelete = async (process) => {
     try {
       const response = await axiosInstance.delete(
@@ -126,6 +195,7 @@ function Processes() {
       );
       console.log(response.data);
       fetchProcesses();
+      // handleDeleteDialogClose();
     } catch (error) {
       console.log(error);
     }
@@ -141,20 +211,62 @@ function Processes() {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography variant="body1">{process}</Typography>
-            <Delete
-              color="error"
-              fontSize="medium"
+            <Typography
+              variant="body1"
               onClick={() => {
-                handleProcessDelete(process);
+                navigate(`/process/${process}`);
               }}
               sx={{
                 cursor: "pointer",
               }}
-            />
+            >
+              {process}
+            </Typography>
+            <Stack direction="row" spacing={2}>
+              <Edit
+                color="primary"
+                fontSize="medium"
+                sx={{
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setEditProcess({
+                    open: true,
+                    oldTitle: process,
+                    newTitle: process.split("_").slice(1).join("_"),
+                  });
+                }}
+              />
+              <Delete
+                color="error"
+                fontSize="medium"
+                onClick={() => {
+                  setDeleteProcess({
+                    open: true,
+                    title: process,
+                  });
+                }}
+                sx={{
+                  cursor: "pointer",
+                }}
+              />
+            </Stack>
           </Stack>
         </Grid>
       );
+    });
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteProcess({ open: false, title: "" });
+  };
+
+  const handleEditDialogClose = () => {
+    setEditProcess({
+      open: false,
+      oldTitle: "",
+      newTitle: "",
+      error: "",
     });
   };
 
@@ -201,10 +313,9 @@ function Processes() {
             autoFocus
             margin="dense"
             id="title"
-            label="Process Name"
             type="text"
             fullWidth
-            variant="standard"
+            variant="outlined"
             value={addProcess.title || ""}
             onChange={(e) => {
               handleProcessNameChange(e.target.value);
@@ -226,8 +337,76 @@ function Processes() {
             onClick={() => {
               handleAddProcess();
             }}
+            disabled={
+              addProcess.error === "" && addProcess.title !== "" ? false : true
+            }
           >
             Add
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={editProcess.open} onClose={handleEditDialogClose}>
+        <DialogTitle>Edit Process</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Please enter the process name.</DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="title"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={editProcess.newTitle || ""}
+            onChange={(e) => {
+              handleEditProcessNameChange(e.target.value);
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  {`${editProcess.oldTitle.split("_").shift()}_`}
+                </InputAdornment>
+              ),
+            }}
+            error={editProcess.error ? true : false}
+            helperText={editProcess.error}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEditDialogClose}>Cancel</Button>
+          <Button
+            onClick={() => {
+              handleProcessEdit();
+            }}
+            disabled={
+              editProcess.error === "" &&
+              editProcess.newTitle !== "" &&
+              editProcess.newTitle !==
+                editProcess.oldTitle.split("_").slice(1).join("_")
+                ? false
+                : true
+            }
+          >
+            Edit
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={deleteProcess.open} onClose={handleDeleteDialogClose}>
+        <DialogTitle>Delete Process</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete the process {deleteProcess.title}?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteDialogClose}>Cancel</Button>
+          <Button
+            onClick={() => {
+              handleProcessDelete(deleteProcess.title);
+            }}
+          >
+            Delete
           </Button>
         </DialogActions>
       </Dialog>

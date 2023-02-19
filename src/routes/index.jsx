@@ -3,6 +3,7 @@ import Settings from "../pages/settings";
 import ProcessMaintenance from "../pages/processMaintenance";
 import NotFound from "../pages/page404";
 import Layout from "../layout";
+import SingleProcess from "../pages/singleProcess";
 
 export default function Router() {
   const routes = useRoutes([
@@ -19,8 +20,8 @@ export default function Router() {
           element: <Settings />,
         },
         {
-          path: "/processes/:id",
-          // element: <Processes />,
+          path: "/process/:processTitle",
+          element: <SingleProcess />,
         },
         {
           path: "*",
