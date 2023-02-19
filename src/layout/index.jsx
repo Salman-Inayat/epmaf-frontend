@@ -28,10 +28,11 @@ const Layout = ({ children }) => {
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "row",
+            gap: "1rem",
           }}
         >
           <img src="/vite.svg" alt="logo" />
-          <Typography variant="h6">Title</Typography>
+          <Typography variant="h5">EPMAF</Typography>
         </Box>
       </Grid>
       <Grid
