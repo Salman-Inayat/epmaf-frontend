@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
@@ -15,14 +15,13 @@ import {
   DialogTitle,
 } from "@mui/material";
 import axiosInstance from "../axiosInstance";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-import SaveIcon from "@mui/icons-material/Save";
-import { Save } from "@mui/icons-material";
+import { Context } from "../App";
 
 function Settings() {
   const navigate = useNavigate();
+
+  const { updateAppIcon } = useContext(Context);
+
   const [settings, setSettings] = useState({});
   const [editMode, setEditMode] = useState({
     category: "",
@@ -35,6 +34,11 @@ function Settings() {
     precedent: "",
     key: "",
     value: "",
+  });
+
+  const [applicationIcon, setApplicationIcon] = useState({
+    file: null,
+    url: null,
   });
 
   useEffect(() => {
@@ -84,6 +88,15 @@ function Settings() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const updateApplicationIcon = async (e) => {
+    await updateAppIcon(applicationIcon.file);
+
+    setApplicationIcon({
+      file: null,
+      url: null,
+    });
   };
 
   const renderSettingsByCategory = () => {
@@ -194,6 +207,48 @@ function Settings() {
       <Grid container spacing={4}>
         <Grid item xs={12} md={12}>
           <Typography variant="h4">Settings</Typography>
+        </Grid>
+        <Grid item xs={12} md={12} my={3}>
+          <Stack direction="row" spacing={2} justifyContent="space-between">
+            <Typography variant="h5">Application Icon</Typography>
+            <Button variant="contained" component="label">
+              Upload icon
+              <input
+                hidden
+                accept="image/*"
+                multiple
+                type="file"
+                onChange={(e) => {
+                  setApplicationIcon({
+                    file: e.target.files[0],
+                    url: URL.createObjectURL(e.target.files[0]),
+                  });
+                }}
+              />
+            </Button>
+          </Stack>
+          {applicationIcon.url && (
+            <Stack
+              direction="column"
+              spacing={2}
+              mt={2}
+              justifyContent="center"
+              alignItems="center"
+            >
+              <img
+                src={applicationIcon.url}
+                alt="application icon"
+                style={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: 10,
+                }}
+              />
+              <Button variant="contained" onClick={updateApplicationIcon}>
+                Save
+              </Button>
+            </Stack>
+          )}
         </Grid>
         <Grid item xs={12} md={12}>
           <Grid container spacing={5}>

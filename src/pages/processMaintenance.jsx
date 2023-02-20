@@ -14,6 +14,15 @@ import {
   Button,
   TextField,
   InputAdornment,
+  Card,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TablePagination,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +31,9 @@ import { Edit } from "@mui/icons-material";
 
 function Processes() {
   const navigate = useNavigate();
+
+  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [page, setPage] = useState(0);
 
   const [processes, setProcesses] = useState([]);
 
@@ -195,66 +207,190 @@ function Processes() {
       );
       console.log(response.data);
       fetchProcesses();
-      // handleDeleteDialogClose();
+      handleDeleteDialogClose();
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   const renderProcesses = () => {
-    return processes.map((process, index) => {
-      return (
-        <Grid item xs={12} md={12} lg={12} key={process}>
-          <Stack
-            direction="row"
-            spacing={2}
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography
-              variant="body1"
-              onClick={() => {
-                navigate(`/process/${process}`);
-              }}
-              sx={{
-                cursor: "pointer",
-              }}
-            >
-              {process}
-            </Typography>
-            <Stack direction="row" spacing={2}>
-              <Edit
-                color="primary"
-                fontSize="medium"
-                sx={{
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  setEditProcess({
-                    open: true,
-                    oldTitle: process,
-                    newTitle: process.split("_").slice(1).join("_"),
-                  });
-                }}
-              />
-              <Delete
-                color="error"
-                fontSize="medium"
-                onClick={() => {
-                  setDeleteProcess({
-                    open: true,
-                    title: process,
-                  });
-                }}
-                sx={{
-                  cursor: "pointer",
-                }}
-              />
-            </Stack>
-          </Stack>
-        </Grid>
-      );
-    });
+    // return processes.map((process, index) => {
+    //   return (
+    //     <Grid item xs={12} md={12} lg={12} key={process}>
+    //       <Paper sx={{ p: 2, mb: 2 }} elevation={2}>
+    //         <Stack
+    //           direction="row"
+    //           spacing={2}
+    //           justifyContent="space-between"
+    //           alignItems="center"
+    //         >
+    //           <Typography
+    //             variant="body1"
+    //             onClick={() => {
+    //               navigate(`/process/${process}`);
+    //             }}
+    //             sx={{
+    //               cursor: "pointer",
+    //             }}
+    //           >
+    //             {process}
+    //           </Typography>
+    //           <Stack direction="row" spacing={2}>
+    //             <Edit
+    //               color="primary"
+    //               fontSize="medium"
+    //               sx={{
+    //                 cursor: "pointer",
+    //               }}
+    //               onClick={() => {
+    //                 setEditProcess({
+    //                   open: true,
+    //                   oldTitle: process,
+    //                   newTitle: process.split("_").slice(1).join("_"),
+    //                 });
+    //               }}
+    //             />
+    //             <Delete
+    //               color="error"
+    //               fontSize="medium"
+    //               onClick={() => {
+    //                 setDeleteProcess({
+    //                   open: true,
+    //                   title: process,
+    //                 });
+    //               }}
+    //               sx={{
+    //                 cursor: "pointer",
+    //               }}
+    //             />
+    //           </Stack>
+    //         </Stack>
+    //       </Paper>
+    //     </Grid>
+    //   );
+    // });
+
+    const emptyRows =
+      rowsPerPage -
+      Math.min(rowsPerPage, processes.length - page * rowsPerPage);
+
+    return (
+      <Paper sx={{ width: "100%" }}>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <Typography variant="body1" fontWeight={600}>
+                    No
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="body1" fontWeight={600}>
+                    Title
+                  </Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography variant="body1" fontWeight={600}>
+                    Actions
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {processes
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((process, index) => (
+                  <TableRow
+                    key={process}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      <Typography variant="body1">{index + 1}</Typography>
+                    </TableCell>
+
+                    <TableCell component="th" scope="row">
+                      <Typography
+                        variant="body1"
+                        onClick={() => {
+                          navigate(`/process/${process}`);
+                        }}
+                        sx={{
+                          cursor: "pointer",
+                        }}
+                      >
+                        {process}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Stack
+                        direction="row"
+                        spacing={2}
+                        justifyContent="center"
+                      >
+                        <Edit
+                          color="primary"
+                          fontSize="medium"
+                          sx={{
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            setEditProcess({
+                              open: true,
+                              oldTitle: process,
+                              newTitle: process.split("_").slice(1).join("_"),
+                            });
+                          }}
+                        />
+                        <Delete
+                          color="error"
+                          fontSize="medium"
+                          onClick={() => {
+                            setDeleteProcess({
+                              open: true,
+                              title: process,
+                            });
+                          }}
+                          sx={{
+                            cursor: "pointer",
+                          }}
+                        />
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              {emptyRows > 0 && (
+                <TableRow
+                  style={{
+                    height: 53 * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[20, 40, 80]}
+          component="div"
+          count={processes.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+    );
   };
 
   const handleDeleteDialogClose = () => {
@@ -271,16 +407,15 @@ function Processes() {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="xl">
       <Grid container spacing={5}>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={12} mt={5}>
           <Stack
             direction="row"
             spacing={2}
             alignItems="center"
-            justifyContent="space-between"
+            justifyContent="flex-end"
           >
-            <Typography variant="h4">Process Maintenance</Typography>
             <Button
               variant="contained"
               color="primary"
@@ -305,6 +440,12 @@ function Processes() {
       <Dialog
         open={addProcess.open}
         onClose={() => setAddProcess({ open: false })}
+        sx={{
+          "& .MuiDialog-paper": {
+            width: "100%",
+            maxWidth: "40vw",
+          },
+        }}
       >
         <DialogTitle>Add Process</DialogTitle>
         <DialogContent>
@@ -346,7 +487,16 @@ function Processes() {
         </DialogActions>
       </Dialog>
 
-      <Dialog open={editProcess.open} onClose={handleEditDialogClose}>
+      <Dialog
+        open={editProcess.open}
+        onClose={handleEditDialogClose}
+        sx={{
+          "& .MuiDialog-paper": {
+            width: "100%",
+            maxWidth: "40vw",
+          },
+        }}
+      >
         <DialogTitle>Edit Process</DialogTitle>
         <DialogContent>
           <DialogContentText>Please enter the process name.</DialogContentText>

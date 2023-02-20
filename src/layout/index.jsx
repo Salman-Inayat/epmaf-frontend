@@ -1,7 +1,17 @@
-import { Grid, Card, Box, CardContent, Typography } from "@mui/material";
+import React, { useContext } from "react";
+import { Grid, Button, Box, CardContent, Typography } from "@mui/material";
 import { Outlet } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
+import { Home, Settings } from "@mui/icons-material";
+
+import { Context } from "../App";
 
 const Layout = ({ children }) => {
+  const navigate = useNavigate();
+
+  const { appIcon } = useContext(Context);
+
   return (
     <Grid
       container
@@ -16,12 +26,35 @@ const Layout = ({ children }) => {
         xs={12}
         sx={{
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "space-around",
           alignItems: "center",
-          flexDirection: "column",
+          flexDirection: "row",
           height: "10vh",
         }}
       >
+        <Button
+          onClick={() => {
+            navigate("/");
+          }}
+          sx={{
+            fontSize: "1.2rem",
+            textTransform: "none",
+          }}
+        >
+          Home
+        </Button>
+        {/* <Link
+          to="/"
+          style={{
+            fontSize: "1.2rem",
+            textDecoration: "none",
+            color: "primary.main",
+            fontFamily: "Roboto",
+          }}
+        >
+          <Home />
+        </Link> */}
+
         <Box
           sx={{
             display: "flex",
@@ -31,9 +64,29 @@ const Layout = ({ children }) => {
             gap: "1rem",
           }}
         >
-          <img src="/vite.svg" alt="logo" />
+          <img
+            src={appIcon}
+            alt="logo"
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 10,
+            }}
+          />
           <Typography variant="h5">EPMAF</Typography>
         </Box>
+        <Button
+          onClick={() => {
+            navigate("/settings");
+          }}
+          sx={{
+            textTransform: "none",
+            fontSize: "1.2rem",
+          }}
+        >
+          {/* <Settings /> */}
+          Settings
+        </Button>
       </Grid>
       <Grid
         item

@@ -97,16 +97,16 @@ const SingleProcess = () => {
             {processTitle}
           </Typography>
         </Grid>
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={12} sm={12}>
           <Stack
             direction="row"
             spacing={2}
-            justifyContent="space-between"
+            justifyContent="flex-end"
             alignItems="center"
           >
-            <Typography variant="h6" component="h2" gutterBottom>
+            {/* <Typography variant="h6" component="h2" gutterBottom>
               Steps
-            </Typography>
+            </Typography> */}
             <Button
               variant="contained"
               startIcon={<AddIcon />}
