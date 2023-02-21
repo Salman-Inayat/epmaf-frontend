@@ -46,7 +46,6 @@ const SingleProcess = () => {
   const fetchProcessSteps = async () => {
     try {
       const response = await axiosInstance.get(`/process/${processTitle}`);
-      console.log(response.data);
       setSteps(response.data.steps);
     } catch (error) {
       console.log(error);
@@ -68,7 +67,6 @@ const SingleProcess = () => {
           data,
         }
       );
-      console.log(response.data);
       setAddStep({ open: false, data: {} });
       fetchProcessSteps();
     } catch (error) {
@@ -82,7 +80,6 @@ const SingleProcess = () => {
         `/process/${processTitle}/step/${commandStep}`
       );
 
-      console.log(response.data);
       fetchProcessSteps();
     } catch (error) {
       console.log(error);
@@ -91,22 +88,17 @@ const SingleProcess = () => {
 
   return (
     <Container maxWidth="xl">
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            {processTitle}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} md={12} sm={12}>
+      <Grid container spacing={5}>
+        <Grid item xs={12} md={12} sm={12} mt={5}>
           <Stack
             direction="row"
             spacing={2}
-            justifyContent="flex-end"
+            justifyContent="space-between"
             alignItems="center"
           >
-            {/* <Typography variant="h6" component="h2" gutterBottom>
-              Steps
-            </Typography> */}
+            <Typography variant="h6" component="h1">
+              {processTitle}
+            </Typography>
             <Button
               variant="contained"
               startIcon={<AddIcon />}
@@ -116,7 +108,7 @@ const SingleProcess = () => {
             </Button>
           </Stack>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} md={12}>
           {steps.length > 0 && (
             <StepsTable steps={steps} deleteStep={deleteStep} />
           )}

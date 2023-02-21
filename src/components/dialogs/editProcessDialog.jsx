@@ -9,17 +9,16 @@ import {
   Button,
 } from "@mui/material";
 
-const AddProcessDialog = ({
-  addProcess,
-  handleClose,
-  handleAddProcess,
-  generateNextProcessNumber,
-  handleProcessNameChange,
+const EditProcessDialog = ({
+  editProcess,
+  handleEditDialogClose,
+  handleProcessEdit,
+  handleEditProcessNameChange,
 }) => {
   return (
     <Dialog
-      open={addProcess.open}
-      onClose={handleClose}
+      open={editProcess.open}
+      onClose={handleEditDialogClose}
       sx={{
         "& .MuiDialog-paper": {
           width: "100%",
@@ -27,7 +26,7 @@ const AddProcessDialog = ({
         },
       }}
     >
-      <DialogTitle>Add Process</DialogTitle>
+      <DialogTitle>Edit Process</DialogTitle>
       <DialogContent>
         <DialogContentText>Please enter the process name.</DialogContentText>
         <TextField
@@ -37,36 +36,41 @@ const AddProcessDialog = ({
           type="text"
           fullWidth
           variant="outlined"
-          value={addProcess.title || ""}
+          value={editProcess.newTitle || ""}
           onChange={(e) => {
-            handleProcessNameChange(e.target.value);
+            handleEditProcessNameChange(e.target.value);
           }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                {`${generateNextProcessNumber()}_`}
+                {`${editProcess.oldTitle.split("_").shift()}_`}
               </InputAdornment>
             ),
           }}
-          error={addProcess.error ? true : false}
-          helperText={addProcess.error}
+          error={editProcess.error ? true : false}
+          helperText={editProcess.error}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleEditDialogClose}>Cancel</Button>
         <Button
           onClick={() => {
-            handleAddProcess();
+            handleProcessEdit();
           }}
           disabled={
-            addProcess.error === "" && addProcess.title !== "" ? false : true
+            editProcess.error === "" &&
+            editProcess.newTitle !== "" &&
+            editProcess.newTitle !==
+              editProcess.oldTitle.split("_").slice(1).join("_")
+              ? false
+              : true
           }
         >
-          Add
+          Edit
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default AddProcessDialog;
+export default EditProcessDialog;

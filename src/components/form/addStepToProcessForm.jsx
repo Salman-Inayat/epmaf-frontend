@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { Button, Grid, TextField, MenuItem } from "@mui/material";
 
 import SaveIcon from "@mui/icons-material/Save";
@@ -14,10 +13,6 @@ const AddStepToProcessForm = ({
   previousProcessStep,
   handleAddStep,
 }) => {
-  console.log({
-    nextProcessStep,
-    previousProcessStep,
-  });
   const schema = yup.object().shape({
     commandStep: yup.string().required(),
     commandSubStep: yup.string().required(),

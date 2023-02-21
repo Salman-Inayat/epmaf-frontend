@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+
 import {
   Button,
   Container,
@@ -16,10 +15,9 @@ import {
 } from "@mui/material";
 import axiosInstance from "../axiosInstance";
 import { Context } from "../App";
+import AddPropertyToSettingsDialog from "../components/dialogs/addPropertyToSettingsDialog";
 
 function Settings() {
-  const navigate = useNavigate();
-
   const { updateAppIcon } = useContext(Context);
 
   const [settings, setSettings] = useState({});
@@ -46,16 +44,19 @@ function Settings() {
   }, []);
 
   const fetchSettings = async () => {
-    const response = await axiosInstance.get("/settings");
-    setSettings(response.data.settings);
+    try {
+      const response = await axiosInstance.get("/settings");
+      setSettings(response.data.settings);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleCategorySave = (data) => {
+  const handleCategorySave = async (data) => {
     try {
-      const response = axiosInstance.put("/settings/update", {
+      await axiosInstance.put("/settings/update", {
         data,
       });
-      console.log(response);
 
       setEditMode({
         category: "",
@@ -66,15 +67,13 @@ function Settings() {
     }
   };
 
-  const handleAddNewProperty = () => {
-    console.log(addProperty);
+  const handleAddNewProperty = async () => {
     try {
-      const response = axiosInstance.put("/settings/add-property", {
+      await axiosInstance.put("/settings/add-property", {
         key: addProperty.key,
         value: addProperty.value,
         precedent: addProperty.precedent,
       });
-      console.log(response);
 
       setAddProperty({
         category: "",
@@ -136,6 +135,7 @@ function Settings() {
                       variant="contained"
                       onClick={() => {
                         setAddProperty({
+                          ...addProperty,
                           category: key,
                           mode: !addProperty.mode,
                           precedent: Object.keys(settings[key]).pop(),
@@ -202,6 +202,23 @@ function Settings() {
     });
   };
 
+  const handleSetAddProperty = (key, value) => {
+    setAddProperty({
+      ...addProperty,
+      [key]: value,
+    });
+  };
+
+  const handleClose = () => {
+    setAddProperty({
+      category: "",
+      mode: false,
+      precedent: "",
+      key: "",
+      value: "",
+    });
+  };
+
   return (
     <Container maxWidth="lg">
       <Grid container spacing={4}>
@@ -256,7 +273,7 @@ function Settings() {
           </Grid>
         </Grid>
       </Grid>
-      <Dialog
+      {/* <Dialog
         open={addProperty.mode}
         onClose={() => {
           setAddProperty({
@@ -319,11 +336,19 @@ function Settings() {
             onClick={() => {
               handleAddNewProperty();
             }}
+            disabled={addProperty.key === "" && addProperty.value === ""}
           >
             Add
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
+
+      <AddPropertyToSettingsDialog
+        addProperty={addProperty}
+        handleSetAddProperty={handleSetAddProperty}
+        handleAddNewProperty={handleAddNewProperty}
+        handleClose={handleClose}
+      />
     </Container>
   );
 }

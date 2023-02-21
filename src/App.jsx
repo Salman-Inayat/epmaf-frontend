@@ -15,7 +15,6 @@ export default function App() {
   const fetchAppIcon = async () => {
     try {
       const response = await axiosInstance.get("/settings/application-icon");
-      console.log(response.data);
       setAppIcon(response.data.iconPath);
     } catch (error) {
       console.log(error);

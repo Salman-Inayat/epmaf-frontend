@@ -13,17 +13,11 @@ const Layout = ({ children }) => {
   const { appIcon } = useContext(Context);
 
   return (
-    <Grid
-      container
-      spacing={2}
-      sx={{
-        height: "100vh",
-        width: "100vw",
-      }}
-    >
+    <Grid container spacing={2} pb={3}>
       <Grid
         item
         xs={12}
+        md={12}
         sx={{
           display: "flex",
           justifyContent: "space-around",
@@ -43,17 +37,6 @@ const Layout = ({ children }) => {
         >
           Home
         </Button>
-        {/* <Link
-          to="/"
-          style={{
-            fontSize: "1.2rem",
-            textDecoration: "none",
-            color: "primary.main",
-            fontFamily: "Roboto",
-          }}
-        >
-          <Home />
-        </Link> */}
 
         <Box
           sx={{
@@ -84,15 +67,15 @@ const Layout = ({ children }) => {
             fontSize: "1.2rem",
           }}
         >
-          {/* <Settings /> */}
           Settings
         </Button>
       </Grid>
       <Grid
         item
         xs={12}
+        md={12}
         sx={{
-          height: "90vh",
+          height: "100%",
         }}
       >
         <Outlet />
