@@ -16,6 +16,7 @@ import {
 import axiosInstance from "../axiosInstance";
 import { Context } from "../App";
 import AddPropertyToSettingsDialog from "../components/dialogs/addPropertyToSettingsDialog";
+import axios from "axios";
 
 function Settings() {
   const { updateAppIcon } = useContext(Context);
@@ -39,14 +40,66 @@ function Settings() {
     url: null,
   });
 
+  const [encryptedPasswords, setEcryptedPasswords] = useState([]);
+
+  const [encryptPasswords, setEncryptPassword] = useState([
+    {
+      key: "SQL",
+      value: "",
+    },
+    {
+      key: "SMTP",
+      value: "",
+    },
+    {
+      key: "SFTP",
+      value: "",
+    },
+    {
+      key: "EPM",
+      value: "",
+    },
+  ]);
+
+  // const passwords = [
+  //   {
+  //     key: "SQL",
+  //     value: "",
+  //   },
+  //   {
+  //     key: "SMTP",
+  //     value: "",
+  //   },
+  //   {
+  //     key: "SFTP",
+  //     value: "",
+  //   },
+  //   {
+  //     key: "EPM",
+  //     value: "",
+  //   },
+  // ];
   useEffect(() => {
     fetchSettings();
+    fetchEncryptedPasswords();
   }, []);
 
   const fetchSettings = async () => {
     try {
       const response = await axiosInstance.get("/settings");
       setSettings(response.data.settings);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchEncryptedPasswords = async () => {
+    try {
+      const response = await axiosInstance.get("/settings/encrypted-passwords");
+
+      console.log(response.data);
+
+      setEcryptedPasswords(response.data.passwords);
     } catch (error) {
       console.error(error);
     }
@@ -219,13 +272,87 @@ function Settings() {
     });
   };
 
+  const renderEncryptedPasswords = () => {
+    return (
+      <Grid item md={12}>
+        <Grid container spacing={2}>
+          {encryptedPasswords.length > 0 &&
+            encryptedPasswords.map((password) => {
+              return (
+                <Grid item md={12}>
+                  {Object.entries(password).map(([key, value]) => (
+                    <Grid container spacing={2}>
+                      <Grid item md={4}>
+                        <Typography variant="body1">{key}</Typography>
+                      </Grid>
+                      <Grid item md={8}>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            wordBreak: "break-all",
+                          }}
+                        >
+                          {value}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  ))}
+                </Grid>
+              );
+            })}
+        </Grid>
+      </Grid>
+    );
+  };
+
+  const renderEncryptPasswordSection = () => {
+    return (
+      <Grid item md={12}>
+        <Grid container spacing={2}>
+          {encryptPasswords.map((password) => {
+            return (
+              <Grid item md={12}>
+                <Grid container spacing={2}>
+                  <Grid item md={4}>
+                    <Typography variant="body1">{password.key}</Typography>
+                  </Grid>
+                  <Grid item md={6}>
+                    <TextField
+                      value={password.value}
+                      onChange={() => {
+                        setEncryptPassword((prev) => {
+                          if (prev.key === password.key) {
+                            return [
+                              ...prev,
+                              {
+                                ...prev.key,
+                                value: e.target.value,
+                              },
+                            ];
+                          }
+                        });
+                      }}
+                    />
+                  </Grid>
+                  <Grid item md={2}>
+                    <Button>Encrypt</Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Grid>
+    );
+  };
+
   return (
     <Container maxWidth="lg">
       <Grid container spacing={4}>
         <Grid item xs={12} md={12}>
           <Typography variant="h4">Settings</Typography>
         </Grid>
-        <Grid item xs={12} md={12} my={3}>
+        {/* <Grid item xs={12} md={12} my={3}>
           <Stack direction="row" spacing={2} justifyContent="space-between">
             <Typography variant="h5">Application Icon</Typography>
             <Button variant="contained" component="label">
@@ -271,77 +398,28 @@ function Settings() {
           <Grid container spacing={5}>
             {renderSettingsByCategory()}
           </Grid>
+        </Grid> */}
+        <Grid item md={12} xs={12}>
+          <Grid container spacing={4}>
+            <Grid item md={12}>
+              <Typography variant="h5">Encrypted passwords</Typography>
+            </Grid>
+            <Grid item md={12}>
+              {renderEncryptedPasswords()}
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item md={12} xs={12}>
+          <Grid container spacing={4}>
+            <Grid item md={12}>
+              <Typography variant="h5">Encrypt the passwords</Typography>
+            </Grid>
+            <Grid item md={12}>
+              {renderEncryptPasswordSection()}
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
-      {/* <Dialog
-        open={addProperty.mode}
-        onClose={() => {
-          setAddProperty({
-            category: "",
-            mode: false,
-          });
-        }}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">Add a new property</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            To add a new property, please enter the property name and value
-            here.
-          </DialogContentText>
-          <TextField
-            margin="dense"
-            id="name"
-            label="Property Name"
-            type="text"
-            fullWidth
-            value={addProperty.key || ""}
-            onChange={(e) => {
-              setAddProperty({
-                ...addProperty,
-                key: e.target.value,
-              });
-            }}
-          />
-          <TextField
-            margin="dense"
-            id="value"
-            label="Property Value"
-            type="text"
-            fullWidth
-            value={addProperty.value || ""}
-            onChange={(e) => {
-              setAddProperty({
-                ...addProperty,
-                value: e.target.value,
-              });
-            }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => {
-              setAddProperty({
-                category: "",
-                mode: false,
-                precedent: "",
-                key: "",
-                value: "",
-              });
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              handleAddNewProperty();
-            }}
-            disabled={addProperty.key === "" && addProperty.value === ""}
-          >
-            Add
-          </Button>
-        </DialogActions>
-      </Dialog> */}
 
       <AddPropertyToSettingsDialog
         addProperty={addProperty}
