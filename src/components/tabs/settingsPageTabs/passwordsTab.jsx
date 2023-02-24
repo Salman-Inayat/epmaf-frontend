@@ -6,12 +6,6 @@ const PasswordsTab = ({
   handleEncryptPassword,
   handleSetEncryptPassword,
 }) => {
-  console.log({
-    encryptedPasswords,
-    encryptPasswords,
-    handleEncryptPassword,
-    handleSetEncryptPassword,
-  });
   const renderEncryptedPasswords = () => {
     return (
       <Grid item md={12}>
@@ -64,8 +58,9 @@ const PasswordsTab = ({
                       variant="outlined"
                       value={value.value}
                       onChange={(e) => {
-                        console.log("change");
-
+                        if (e.target.value.includes(" ")) {
+                          return;
+                        }
                         handleSetEncryptPassword(key, e.target.value);
                       }}
                     />
