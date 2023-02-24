@@ -15,13 +15,36 @@ import {
   Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useState } from "react";
+import EditIcon from "@mui/icons-material/Edit";
 
-const StepsTable = ({ steps, deleteStep }) => {
+import { useState } from "react";
+import EditStepForm from "../form/editStepForm";
+
+const StepsTable = ({ steps, deleteStep, editStep }) => {
   const [deleteDialog, setDeleteDialog] = useState({
     open: false,
     step: "",
   });
+
+  const [editDialog, setEditDialog] = useState({
+    open: false,
+    step: {},
+  });
+
+  const openEditDialog = (step) => {
+    console.log({ step });
+    setEditDialog({
+      open: true,
+      step,
+    });
+  };
+
+  const closeEditDialog = () => {
+    setEditDialog({
+      open: false,
+      step: {},
+    });
+  };
 
   const openDialog = (commandStep) => {
     setDeleteDialog({
@@ -42,6 +65,21 @@ const StepsTable = ({ steps, deleteStep }) => {
     closeDialog();
   };
 
+  const renderCommandEnabled = (commandEnabled) => {
+    if (commandEnabled === "True") {
+      return "Step enabled";
+    }
+    if (commandEnabled === "False") {
+      return "Step disabled";
+    }
+    if (commandEnabled.includes("enabled:ifSuccess")) {
+      return "Step Enabled If Previous Step Succeeds";
+    }
+    if (commandEnabled.includes("enabled:ifFail")) {
+      return "Step Enabled If Previous Step Fails";
+    }
+  };
+
   return (
     <>
       <TableContainer component={Paper}>
@@ -58,36 +96,65 @@ const StepsTable = ({ steps, deleteStep }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {steps.map((step) => (
+            {steps.length > 0 ? (
+              steps.map((step) => (
+                <TableRow
+                  key={step.commandStep}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {step.commandStep}
+                  </TableCell>
+                  <TableCell align="left">{step.commandType}</TableCell>
+                  <TableCell align="left">{step.commandDescription}</TableCell>
+                  <TableCell align="left">{step.command}</TableCell>
+                  <TableCell align="left">
+                    {renderCommandEnabled(step.commandEnabled)}
+                  </TableCell>
+                  <TableCell align="left">
+                    {step.commandContinueOnError === "True"
+                      ? "Continue Process on Error"
+                      : "Terminate Process on Error"}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Stack direction="row" spacing={2}>
+                      <EditIcon
+                        color="primary"
+                        sx={{
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          openEditDialog(step);
+                        }}
+                      />
+
+                      <DeleteIcon
+                        color="error"
+                        onClick={() => {
+                          openDialog(step.commandStep);
+                        }}
+                        sx={{
+                          cursor: "pointer",
+                        }}
+                      />
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
               <TableRow
-                key={step.commandStep}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
-                  {step.commandStep}
-                </TableCell>
-                <TableCell align="left">{step.commandType}</TableCell>
-                <TableCell align="left">{step.commandDescription}</TableCell>
-                <TableCell align="left">{step.command}</TableCell>
-                <TableCell align="left">{step.commandEnabled}</TableCell>
-                <TableCell align="left">
-                  {step.commandContinueOnError}
-                </TableCell>
-                <TableCell align="left">
-                  <Stack direction="row" spacing={2}>
-                    <DeleteIcon
-                      color="error"
-                      onClick={() => {
-                        openDialog(step.commandStep);
-                      }}
-                      sx={{
-                        cursor: "pointer",
-                      }}
-                    />
-                  </Stack>
+                <TableCell
+                  component="th"
+                  scope="row"
+                  colSpan={7}
+                  align="center"
+                >
+                  No steps found. Add a step to get started.
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -102,6 +169,17 @@ const StepsTable = ({ steps, deleteStep }) => {
           <Button onClick={closeDialog}>Cancel</Button>
           <Button onClick={handleDeleteStep}>Delete</Button>
         </DialogActions>
+      </Dialog>
+
+      <Dialog open={editDialog.open} onClose={closeEditDialog}>
+        <DialogTitle>Edit Step</DialogTitle>
+        <DialogContent>
+          <EditStepForm
+            step={editDialog.step}
+            editStep={editStep}
+            closeEditDialog={closeEditDialog}
+          />
+        </DialogContent>
       </Dialog>
     </>
   );

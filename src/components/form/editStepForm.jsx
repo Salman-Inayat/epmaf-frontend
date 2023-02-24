@@ -8,13 +8,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import * as yup from "yup";
 
-const AddStepToProcessForm = ({ nextProcessStep, handleAddStep }) => {
-  const getStepPriorToNextStep = (nextProcessStep) => {
-    const stepPriorToNextStep = parseInt(nextProcessStep, 10) - 1;
-    return stepPriorToNextStep.toString().padStart(3, "0");
+const EditStepForm = ({ step, editStep, closeEditDialog }) => {
+  const getpreviousStep = (currentStep) => {
+    const previousStep = parseInt(currentStep, 10) - 1;
+    return previousStep.toString().padStart(3, "0");
   };
 
-  const stepPriorToNextStep = getStepPriorToNextStep(nextProcessStep);
+  const previousStep = getpreviousStep(step.commandStep);
 
   const schema = yup.object().shape({
     commandStep: yup.string().required(),
@@ -44,21 +44,24 @@ const AddStepToProcessForm = ({ nextProcessStep, handleAddStep }) => {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      commandStep: nextProcessStep,
+      commandStep: step.commandStep,
       commandSubStep: "000",
-      commandType: "",
-      commandDescription: "",
-      command: "",
-      commandEnabled: "",
-      commandContinueOnError: "",
+      commandType: step.commandType,
+      commandDescription: step.commandDescription,
+      command: step.command,
+      commandEnabled: step.commandEnabled,
+      commandContinueOnError: step.commandContinueOnError,
     },
   });
 
   const onSubmit = (data) => {
-    handleAddStep(data);
+    console.log(data);
+    editStep(data);
+    closeEditDialog();
   };
 
   return (
@@ -93,7 +96,6 @@ const AddStepToProcessForm = ({ nextProcessStep, handleAddStep }) => {
                 helperText={errors?.commandStep?.message}
               />
             </Grid>
-
             <Grid item md={6} sm={6}>
               <TextField
                 fullWidth
@@ -103,7 +105,7 @@ const AddStepToProcessForm = ({ nextProcessStep, handleAddStep }) => {
                 {...register("commandType")}
                 error={!!errors.commandType}
                 helperText={errors?.commandType?.message}
-                defaultValue=""
+                defaultValue={step.commandType}
               >
                 {["EPMAutomate", "PSScriptBlock", "PSScriptFile"].map(
                   (commandType) => (
@@ -147,7 +149,7 @@ const AddStepToProcessForm = ({ nextProcessStep, handleAddStep }) => {
                 {...register("commandEnabled")}
                 error={!!errors.commandEnabled}
                 helperText={errors?.commandEnabled?.message}
-                defaultValue=""
+                defaultValue={step.commandEnabled}
               >
                 {[
                   {
@@ -159,11 +161,11 @@ const AddStepToProcessForm = ({ nextProcessStep, handleAddStep }) => {
                     label: "Step disabled",
                   },
                   {
-                    value: `enabled:ifSuccess:${stepPriorToNextStep}:000`,
+                    value: `enabled:ifSuccess:${previousStep}:000`,
                     label: "Step Enabled If Previous Step Succeeds",
                   },
                   {
-                    value: `enabled:ifFail:${stepPriorToNextStep}:000`,
+                    value: `enabled:ifFail:${previousStep}:000`,
                     label: "Step Enabled If Previous Step Fails",
                   },
                 ].map((commandEnabled) => (
@@ -185,7 +187,7 @@ const AddStepToProcessForm = ({ nextProcessStep, handleAddStep }) => {
                 {...register("commandContinueOnError")}
                 error={!!errors.commandContinueOnError}
                 helperText={errors?.commandContinueOnError?.message}
-                defaultValue=""
+                defaultValue={step.commandContinueOnError}
               >
                 <MenuItem value="True">Continue Process On Error</MenuItem>
                 <MenuItem value="False">Terminate Process On Error</MenuItem>
@@ -217,4 +219,4 @@ const AddStepToProcessForm = ({ nextProcessStep, handleAddStep }) => {
   );
 };
 
-export default AddStepToProcessForm;
+export default EditStepForm;

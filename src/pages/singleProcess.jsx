@@ -1,25 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import {
   Button,
   Container,
   Grid,
-  TextField,
   Typography,
   Stack,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
 } from "@mui/material";
 
 import axiosInstance from "../axiosInstance";
@@ -74,12 +63,27 @@ const SingleProcess = () => {
     }
   };
 
-  const deleteStep = async (commandStep) => {
+  const handleDeleteStep = async (commandStep) => {
     try {
       const response = await axiosInstance.delete(
         `/process/${processTitle}/step/${commandStep}`
       );
 
+      fetchProcessSteps();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEditStep = async (data) => {
+    try {
+      await axiosInstance.patch(
+        `/process/${processTitle}/step/${data.commandStep}`,
+        {
+          data,
+        }
+      );
+      // setAddStep({ open: false, data: {} });
       fetchProcessSteps();
     } catch (error) {
       console.log(error);
@@ -109,9 +113,11 @@ const SingleProcess = () => {
           </Stack>
         </Grid>
         <Grid item xs={12} md={12}>
-          {steps.length > 0 && (
-            <StepsTable steps={steps} deleteStep={deleteStep} />
-          )}
+          <StepsTable
+            steps={steps}
+            deleteStep={handleDeleteStep}
+            editStep={handleEditStep}
+          />
         </Grid>
       </Grid>
       <Dialog
@@ -129,9 +135,6 @@ const SingleProcess = () => {
           <AddStepToProcessForm
             nextProcessStep={
               steps.length > 0 ? generateNextStepNumber(steps) : "001"
-            }
-            previousProcessStep={
-              steps.length > 0 ? steps[steps.length - 1].commandStep : "000"
             }
             handleAddStep={handleAddStep}
           />
