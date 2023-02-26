@@ -38,6 +38,7 @@ function Settings() {
     },
     EPMCloudPassword: {
       value: "",
+      fileName: "",
     },
   });
 
@@ -133,12 +134,17 @@ function Settings() {
     });
   };
 
-  const handleSetEncryptPassword = (key, value) => {
+  const handleSetEncryptPassword = (key, value, fileName) => {
     setEncryptPasswords({
       ...encryptPasswords,
       [key]: {
         ...encryptPasswords[key],
-        value,
+        // value: fileName!=="" ? "" : value,
+        // if there is a file name, then the value is kept using the previous value
+        value: fileName !== "" ? encryptPasswords[key].value : value,
+
+        // if the key is EPMCloudPassword, then the fileName is added to the state
+        ...(key === "EPMCloudPassword" && { fileName }),
       },
     });
   };
@@ -153,22 +159,24 @@ function Settings() {
     });
   };
 
-  const handleEncryptPassword = async (key, value) => {
+  const handleEncryptPassword = async (key, value, fileName) => {
+    console.log({ key, value, fileName });
     try {
       await axiosInstance.post("/settings/encrypt-password", {
         key,
         value,
+        ...(fileName !== "" && { fileName }),
       });
 
-      setEncryptPasswords({
-        ...encryptPasswords,
-        [key]: {
-          ...encryptPasswords[key],
-          value: "",
-        },
-      });
+      // setEncryptPasswords({
+      //   ...encryptPasswords,
+      //   [key]: {
+      //     ...encryptPasswords[key],
+      //     value: "",
+      //   },
+      // });
 
-      fetchEncryptedPasswords();
+      // fetchEncryptedPasswords();
     } catch (error) {
       console.log(error);
     }

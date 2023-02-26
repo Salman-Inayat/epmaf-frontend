@@ -1,4 +1,4 @@
-import { Grid, Typography, TextField, Button } from "@mui/material";
+import { Grid, Typography, TextField, Button, Stack } from "@mui/material";
 
 const PasswordsTab = ({
   encryptedPasswords,
@@ -58,37 +58,39 @@ const PasswordsTab = ({
                     <Typography variant="body1">{key}</Typography>
                   </Grid>
                   <Grid item md={6}>
-                    <TextField
-                      fullWidth
-                      size="small"
-                      id="outlined-basic"
-                      variant="outlined"
-                      placeholder="Enter password"
-                      value={value.value}
-                      onChange={(e) => {
-                        if (e.target.value.includes(" ")) {
-                          return;
-                        }
-                        handleSetEncryptPassword(key, e.target.value);
-                      }}
-                    />
-
-                    {key === "EPMCloudPassword" && (
+                    <Stack spacing={2} direction="row" width="100%">
                       <TextField
                         fullWidth
                         size="small"
                         id="outlined-basic"
                         variant="outlined"
+                        placeholder="Enter password"
                         value={value.value}
-                        placeholder="Enter file name"
                         onChange={(e) => {
                           if (e.target.value.includes(" ")) {
                             return;
                           }
-                          handleSetEncryptPassword(key, "", e.target.value);
+                          handleSetEncryptPassword(key, e.target.value, "");
                         }}
                       />
-                    )}
+
+                      {key === "EPMCloudPassword" && (
+                        <TextField
+                          fullWidth
+                          size="small"
+                          id="outlined-basic"
+                          variant="outlined"
+                          value={value.fileName}
+                          placeholder="Enter file name"
+                          onChange={(e) => {
+                            if (e.target.value.includes(" ")) {
+                              return;
+                            }
+                            handleSetEncryptPassword(key, "", e.target.value);
+                          }}
+                        />
+                      )}
+                    </Stack>
                   </Grid>
                   <Grid
                     item
@@ -101,7 +103,12 @@ const PasswordsTab = ({
                   >
                     <Button
                       onClick={() => {
-                        handleEncryptPassword(key, value.value);
+                        // if the key is EPMCloudPassword, then the fileName is passed
+                        handleEncryptPassword(
+                          key,
+                          value.value,
+                          key === "EPMCloudPassword" ? value.fileName : ""
+                        );
                       }}
                     >
                       Encrypt
