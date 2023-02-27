@@ -168,13 +168,14 @@ function Settings() {
         ...(fileName !== "" && { fileName }),
       });
 
-      // setEncryptPasswords({
-      //   ...encryptPasswords,
-      //   [key]: {
-      //     ...encryptPasswords[key],
-      //     value: "",
-      //   },
-      // });
+      setEncryptPasswords({
+        ...encryptPasswords,
+        [key]: {
+          ...encryptPasswords[key],
+          value: "",
+          fileName: "",
+        },
+      });
 
       // fetchEncryptedPasswords();
     } catch (error) {
