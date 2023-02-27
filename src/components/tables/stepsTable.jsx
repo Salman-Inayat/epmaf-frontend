@@ -86,13 +86,61 @@ const StepsTable = ({ steps, deleteStep, editStep }) => {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Step</TableCell>
-              <TableCell align="left">Type</TableCell>
-              <TableCell align="left">Description</TableCell>
-              <TableCell align="left">Command</TableCell>
-              <TableCell align="left">Enabled</TableCell>
-              <TableCell align="left">Continue On Error</TableCell>
-              <TableCell align="left">Actions</TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                }}
+              >
+                Step
+              </TableCell>
+              <TableCell
+                align="left"
+                sx={{
+                  fontWeight: "bold",
+                }}
+              >
+                Type
+              </TableCell>
+              <TableCell
+                align="left"
+                sx={{
+                  fontWeight: "bold",
+                }}
+              >
+                Description
+              </TableCell>
+              <TableCell
+                align="left"
+                sx={{
+                  fontWeight: "bold",
+                }}
+              >
+                Command
+              </TableCell>
+              <TableCell
+                align="left"
+                sx={{
+                  fontWeight: "bold",
+                }}
+              >
+                Enabled
+              </TableCell>
+              <TableCell
+                align="left"
+                sx={{
+                  fontWeight: "bold",
+                }}
+              >
+                Continue On Error
+              </TableCell>
+              <TableCell
+                align="center"
+                sx={{
+                  fontWeight: "bold",
+                }}
+              >
+                Actions
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -117,7 +165,7 @@ const StepsTable = ({ steps, deleteStep, editStep }) => {
                       : "Terminate Process on Error"}
                   </TableCell>
                   <TableCell align="center">
-                    <Stack direction="row" spacing={2}>
+                    <Stack direction="row" spacing={2} justifyContent="center">
                       <EditIcon
                         color="primary"
                         sx={{

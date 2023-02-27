@@ -61,57 +61,76 @@ const ProcessesTable = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {processes
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((process, index) => (
-                <TableRow
-                  key={process}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            {processes.length > 0 ? (
+              processes
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((process, index) => (
+                  <TableRow
+                    key={process}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      <Typography variant="body1">
+                        {page * rowsPerPage + index + 1}
+                      </Typography>
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      <Typography
+                        variant="body1"
+                        onClick={() => {
+                          navigate(`/process/${process}`);
+                        }}
+                        sx={{
+                          cursor: "pointer",
+                        }}
+                      >
+                        {process}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Stack
+                        direction="row"
+                        spacing={2}
+                        justifyContent="center"
+                      >
+                        <Edit
+                          color="primary"
+                          fontSize="medium"
+                          sx={{
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            handleSetProcessEdit(process);
+                          }}
+                        />
+                        <Delete
+                          color="error"
+                          fontSize="medium"
+                          onClick={() => {
+                            handleSetProcessDelete(process);
+                          }}
+                          sx={{
+                            cursor: "pointer",
+                          }}
+                        />
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                ))
+            ) : (
+              <TableRow
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell
+                  component="th"
+                  scope="row"
+                  colSpan={7}
+                  align="center"
                 >
-                  <TableCell component="th" scope="row">
-                    <Typography variant="body1">
-                      {page * rowsPerPage + index + 1}
-                    </Typography>
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    <Typography
-                      variant="body1"
-                      onClick={() => {
-                        navigate(`/process/${process}`);
-                      }}
-                      sx={{
-                        cursor: "pointer",
-                      }}
-                    >
-                      {process}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Stack direction="row" spacing={2} justifyContent="center">
-                      <Edit
-                        color="primary"
-                        fontSize="medium"
-                        sx={{
-                          cursor: "pointer",
-                        }}
-                        onClick={() => {
-                          handleSetProcessEdit(process);
-                        }}
-                      />
-                      <Delete
-                        color="error"
-                        fontSize="medium"
-                        onClick={() => {
-                          handleSetProcessDelete(process);
-                        }}
-                        sx={{
-                          cursor: "pointer",
-                        }}
-                      />
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              ))}
+                  No process found. Add a process to get started.
+                </TableCell>
+              </TableRow>
+            )}
             {emptyRows > 0 && (
               <TableRow
                 style={{
