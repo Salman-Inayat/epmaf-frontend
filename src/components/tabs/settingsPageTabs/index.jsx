@@ -50,6 +50,8 @@ const SettingsTab = ({
   handleEncryptPassword,
   encryptedPasswords,
   handleSetEncryptPassword,
+
+  loading,
 }) => {
   const [value, setValue] = useState(0);
 
@@ -89,6 +91,7 @@ const SettingsTab = ({
           handleEncryptPassword={handleEncryptPassword}
           encryptedPasswords={encryptedPasswords}
           handleSetEncryptPassword={handleSetEncryptPassword}
+          loading={loading}
         />
       </TabPanel>
     </Box>

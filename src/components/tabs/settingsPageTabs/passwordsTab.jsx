@@ -1,10 +1,18 @@
-import { Grid, Typography, TextField, Button, Stack } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  TextField,
+  Stack,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 
 const PasswordsTab = ({
   encryptedPasswords,
   encryptPasswords,
   handleEncryptPassword,
   handleSetEncryptPassword,
+  loading,
 }) => {
   const renderEncryptedPasswords = () => {
     return (
@@ -53,7 +61,7 @@ const PasswordsTab = ({
           {Object.entries(encryptPasswords).map(([key, value]) => {
             return (
               <Grid item md={12}>
-                <Grid container spacing={2}>
+                <Grid container spacing={2} display="flex" alignItems="center">
                   <Grid item md={4}>
                     <Typography variant="body1">{key}</Typography>
                   </Grid>
@@ -92,15 +100,7 @@ const PasswordsTab = ({
                       )}
                     </Stack>
                   </Grid>
-                  <Grid
-                    item
-                    md={2}
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                    }}
-                  >
+                  <Grid item md={2}>
                     <Button
                       onClick={() => {
                         // if the key is EPMCloudPassword, then the fileName is passed
@@ -110,8 +110,15 @@ const PasswordsTab = ({
                           key === "EPMCloudPassword" ? value.fileName : ""
                         );
                       }}
+                      disabled={loading || value.value === ""}
+                      variant="outlined"
+                      fullWidth
                     >
-                      Encrypt
+                      {loading && value.value !== "" ? (
+                        <CircularProgress size={26} />
+                      ) : (
+                        "Encrypt"
+                      )}
                     </Button>
                   </Grid>
                 </Grid>

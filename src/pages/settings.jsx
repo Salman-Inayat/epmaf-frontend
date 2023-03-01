@@ -42,6 +42,8 @@ function Settings() {
     },
   });
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     fetchSettings();
     fetchEncryptedPasswords();
@@ -161,6 +163,8 @@ function Settings() {
 
   const handleEncryptPassword = async (key, value, fileName) => {
     console.log({ key, value, fileName });
+
+    setLoading(true);
     try {
       await axiosInstance.post("/settings/encrypt-password", {
         key,
@@ -168,16 +172,19 @@ function Settings() {
         ...(fileName !== "" && { fileName }),
       });
 
-      setEncryptPasswords({
-        ...encryptPasswords,
-        [key]: {
-          ...encryptPasswords[key],
-          value: "",
-          fileName: "",
-        },
-      });
+      setTimeout(() => {
+        setEncryptPasswords({
+          ...encryptPasswords,
+          [key]: {
+            ...encryptPasswords[key],
+            value: "",
+            fileName: "",
+          },
+        });
+        setLoading(false);
 
-      // fetchEncryptedPasswords();
+        fetchEncryptedPasswords();
+      }, 5000);
     } catch (error) {
       console.log(error);
     }
@@ -209,6 +216,7 @@ function Settings() {
             handleEncryptPassword={handleEncryptPassword}
             encryptedPasswords={encryptedPasswords}
             handleSetEncryptPassword={handleSetEncryptPassword}
+            loading={loading}
           />
         </Grid>
       </Grid>
