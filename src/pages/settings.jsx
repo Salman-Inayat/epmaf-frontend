@@ -5,6 +5,7 @@ import axiosInstance from "../axiosInstance";
 import SettingsTab from "../components/tabs/settingsPageTabs";
 
 function Settings() {
+  document.title = "EPMCAF | Settings";
   const [settings, setSettings] = useState({});
   const [editMode, setEditMode] = useState({
     category: "",
@@ -27,18 +28,22 @@ function Settings() {
   const [encryptedPasswords, setEncryptedPasswords] = useState([]);
 
   const [encryptPasswords, setEncryptPasswords] = useState({
-    SQLServerPassword: {
+    EPMCloudPassword: {
+      title: "EPM Cloud",
+      value: "",
+      fileName: "",
+    },
+    SFTPServerPassword: {
+      title: "SFTP Server",
       value: "",
     },
     SMTPServerPassword: {
+      title: "SMTP Server",
       value: "",
     },
-    SFTPServerPassword: {
+    SQLServerPassword: {
+      title: "SQL Server",
       value: "",
-    },
-    EPMCloudPassword: {
-      value: "",
-      fileName: "",
     },
   });
 
@@ -62,7 +67,7 @@ function Settings() {
     try {
       const response = await axiosInstance.get("/settings/encrypted-passwords");
 
-      setEncryptedPasswords(response.data.passwords);
+      setEncryptedPasswords(response.data.encryptedPasswords);
     } catch (error) {
       console.error(error);
     }
@@ -95,7 +100,7 @@ function Settings() {
   const handleCategorySave = async (data) => {
     try {
       await axiosInstance.put("/settings/update", {
-        data,
+        data: JSON.stringify(data),
       });
 
       setEditMode({

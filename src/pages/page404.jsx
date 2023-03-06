@@ -18,6 +18,8 @@ const ContentStyle = styled("div")(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Page404() {
+  document.title = "EPMCAF | Page not found";
+
   return (
     <Container>
       <ContentStyle sx={{ textAlign: "center", alignItems: "center" }}>

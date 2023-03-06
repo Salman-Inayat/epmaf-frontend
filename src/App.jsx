@@ -35,6 +35,7 @@ export default function App() {
         }
       );
       setAppIcon(response.data.iconPath);
+      fetchAppIcon();
     } catch (error) {
       console.log(error);
     }

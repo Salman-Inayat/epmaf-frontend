@@ -175,9 +175,9 @@ const EnvironmentVariablesTab = ({
     <Grid container spacing={2}>
       <Grid item xs={12} md={12} my={3}>
         <Stack direction="row" spacing={2} justifyContent="space-between">
-          <Typography variant="h5">Application Icon</Typography>
+          <Typography variant="h5">Logo</Typography>
           <Button variant="contained" component="label">
-            Upload icon
+            Upload logo
             <input
               hidden
               accept="image/*"

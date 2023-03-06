@@ -20,15 +20,15 @@ const AddPropertyToSettingsDialog = ({
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">Add a new property</DialogTitle>
+      <DialogTitle id="form-dialog-title">Add a New Variable</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          To add a new property, please enter the property name and value here.
+          To add a new variable, enter the variable name and its value below.
         </DialogContentText>
         <TextField
           margin="dense"
           id="name"
-          label="Property Name"
+          label="Variable Name"
           type="text"
           fullWidth
           value={addProperty.key || ""}
@@ -39,7 +39,7 @@ const AddPropertyToSettingsDialog = ({
         <TextField
           margin="dense"
           id="value"
-          label="Property Value"
+          label="Variable Value"
           type="text"
           fullWidth
           value={addProperty.value || ""}

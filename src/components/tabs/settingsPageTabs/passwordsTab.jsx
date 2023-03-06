@@ -6,6 +6,13 @@ import {
   Button,
   CircularProgress,
 } from "@mui/material";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 const PasswordsTab = ({
   encryptedPasswords,
@@ -14,42 +21,56 @@ const PasswordsTab = ({
   handleSetEncryptPassword,
   loading,
 }) => {
+  console.log({ encryptedPasswords });
   const renderEncryptedPasswords = () => {
     return (
       <Grid item md={12}>
-        <Grid container spacing={2}>
-          {encryptedPasswords.length > 0 ? (
-            encryptedPasswords.map((password) => {
-              return (
-                <Grid item md={12}>
-                  {Object.entries(password).map(([key, value]) => (
-                    <Grid container spacing={2}>
-                      <Grid item md={4}>
-                        <Typography variant="body1">{key}</Typography>
-                      </Grid>
-                      <Grid item md={8}>
-                        <Typography
-                          variant="body1"
-                          sx={{
-                            wordBreak: "break-all",
-                          }}
-                        >
-                          {value}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  ))}
-                </Grid>
-              );
-            })
-          ) : (
-            <Grid item md={12} xs={12} sm={12}>
-              <Typography variant="body1">
-                No encrypted passwords present
-              </Typography>
-            </Grid>
-          )}
-        </Grid>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Title</TableCell>
+                <TableCell align="center">Password Encrypted</TableCell>
+                <TableCell align="left">Last Encryption Date/Time</TableCell>
+                <TableCell align="left">File Name</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {encryptedPasswords.length > 0 ? (
+                encryptedPasswords.map((password) => {
+                  return (
+                    <TableRow
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {password.title}
+                      </TableCell>
+                      <TableCell component="th" scope="row" align="center">
+                        {password.encrypted ? "Yes" : "No"}
+                      </TableCell>
+                      <TableCell align="left">
+                        {new Date(password.lastEncryptionTime).toLocaleString()}
+                      </TableCell>
+                      <TableCell align="left">{password.fileName}</TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                  }}
+                >
+                  <TableCell component="th" scope="row" align="center">
+                    No encrypted passwords present
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Grid>
     );
   };
@@ -63,7 +84,7 @@ const PasswordsTab = ({
               <Grid item md={12}>
                 <Grid container spacing={2} display="flex" alignItems="center">
                   <Grid item md={4}>
-                    <Typography variant="body1">{key}</Typography>
+                    <Typography variant="body1">{value.title}</Typography>
                   </Grid>
                   <Grid item md={6}>
                     <Stack spacing={2} direction="row" width="100%">
@@ -72,7 +93,7 @@ const PasswordsTab = ({
                         size="small"
                         id="outlined-basic"
                         variant="outlined"
-                        placeholder="Enter password"
+                        placeholder="Enter New Password"
                         value={value.value}
                         onChange={(e) => {
                           if (e.target.value.includes(" ")) {
@@ -89,7 +110,7 @@ const PasswordsTab = ({
                           id="outlined-basic"
                           variant="outlined"
                           value={value.fileName}
-                          placeholder="Enter file name"
+                          placeholder="Enter File Name"
                           onChange={(e) => {
                             if (e.target.value.includes(" ")) {
                               return;
@@ -145,7 +166,7 @@ const PasswordsTab = ({
       <Grid item md={12} xs={12}>
         <Grid container spacing={4}>
           <Grid item md={12}>
-            <Typography variant="h5">Encrypt the passwords</Typography>
+            <Typography variant="h5">Encrypt passwords</Typography>
           </Grid>
           <Grid item md={12}>
             {renderEncryptPasswordSection()}

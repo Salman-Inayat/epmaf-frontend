@@ -8,6 +8,8 @@ import DeleteProcessDialog from "../components/dialogs/deleteProcessDialog";
 import ProcessesTable from "../components/tables/processesTable";
 
 function Processes() {
+  document.title = "EPMCAF | Processes";
+
   const [processes, setProcesses] = useState([]);
 
   const [addProcess, setAddProcess] = useState({

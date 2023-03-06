@@ -21,6 +21,7 @@ import StepsTable from "../components/tables/stepsTable";
 const SingleProcess = () => {
   const { processTitle } = useParams();
 
+  document.title = `EPMCAF | ${processTitle}`;
   const [steps, setSteps] = useState([]);
 
   const [addStep, setAddStep] = useState({
@@ -90,6 +91,15 @@ const SingleProcess = () => {
     }
   };
 
+  const handleRunProcess = async () => {
+    try {
+      const response = await axiosInstance.get(`/process/${processTitle}/run`);
+      console.log({ response });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Container maxWidth="xl">
       <Grid container spacing={5}>
@@ -103,13 +113,18 @@ const SingleProcess = () => {
             <Typography variant="h6" component="h1">
               {processTitle}
             </Typography>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => setAddStep({ open: true, data: {} })}
-            >
-              Add Step
-            </Button>
+            <Stack direction="row" spacing={3}>
+              <Button variant="contained" onClick={handleRunProcess}>
+                Run
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={() => setAddStep({ open: true, data: {} })}
+              >
+                Add Step
+              </Button>
+            </Stack>
           </Stack>
         </Grid>
         <Grid item xs={12} md={12}>
