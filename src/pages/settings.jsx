@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { Container, Grid, Typography } from "@mui/material";
 import axiosInstance from "../axiosInstance";
 import SettingsTab from "../components/tabs/settingsPageTabs";
+import toast, { Toaster } from "react-hot-toast";
 
 function Settings() {
   document.title = "EPMCAF | Settings";
@@ -171,27 +172,34 @@ function Settings() {
 
     setLoading(true);
     try {
-      await axiosInstance.post("/settings/encrypt-password", {
-        key,
-        value,
-        ...(fileName !== "" && { fileName }),
-      });
+      const response = await axiosInstance.post(
+        "/settings/encrypt-password",
+        {
+          key,
+          value,
+          ...(fileName !== "" && { fileName }),
+        },
+        {
+          timeout: 60000,
+        }
+      );
 
-      setTimeout(() => {
-        setEncryptPasswords({
-          ...encryptPasswords,
-          [key]: {
-            ...encryptPasswords[key],
-            value: "",
-            fileName: "",
-          },
-        });
-        setLoading(false);
+      toast.success("Password encrypted successfully");
 
-        fetchEncryptedPasswords();
-      }, 5000);
+      fetchEncryptedPasswords();
     } catch (error) {
       console.log(error);
+      toast.error("There was an error encrypting the password");
+    } finally {
+      setLoading(false);
+      setEncryptPasswords({
+        ...encryptPasswords,
+        [key]: {
+          ...encryptPasswords[key],
+          value: "",
+          fileName: "",
+        },
+      });
     }
   };
 

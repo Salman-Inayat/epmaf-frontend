@@ -4,6 +4,7 @@ import { useContext, createContext, useState, useEffect } from "react";
 import axiosInstance from "./axiosInstance";
 
 export const Context = createContext();
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
   const [appIcon, setAppIcon] = useState(null);
@@ -49,6 +50,7 @@ export default function App() {
       }}
     >
       <Router />
+      <Toaster position="bottom-center" reverseOrder={false} />
     </Context.Provider>
   );
 }

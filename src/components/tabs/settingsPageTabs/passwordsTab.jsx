@@ -13,6 +13,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import axiosInstance from "../../../axiosInstance";
+
+import toast, { Toaster } from "react-hot-toast";
 
 const PasswordsTab = ({
   encryptedPasswords,
@@ -151,12 +154,26 @@ const PasswordsTab = ({
     );
   };
 
+  const handleGenerateInitialEncryptionKeys = async () => {
+    try {
+      const response = await axiosInstance.post(
+        "/settings/generate-initial-encryption-keys"
+      );
+
+      console.log({ response });
+
+      toast.success("Generating encryption keys");
+    } catch (error) {
+      console.error({ error });
+    }
+  };
+
   return (
     <Grid container spacing={6}>
       <Grid item md={12} xs={12}>
         <Grid container spacing={4}>
           <Grid item md={12}>
-            <Typography variant="h5">Encrypted passwords</Typography>
+            <Typography variant="h5">Encrypted Passwords</Typography>
           </Grid>
           <Grid item md={12}>
             {renderEncryptedPasswords()}
@@ -165,8 +182,14 @@ const PasswordsTab = ({
       </Grid>
       <Grid item md={12} xs={12}>
         <Grid container spacing={4}>
-          <Grid item md={12}>
-            <Typography variant="h5">Encrypt passwords</Typography>
+          <Grid item md={12} display="flex" justifyContent="space-between">
+            <Typography variant="h5">Encrypt Passwords</Typography>
+            <Button
+              variant="contained"
+              onClick={handleGenerateInitialEncryptionKeys}
+            >
+              Generate encryption keys
+            </Button>
           </Grid>
           <Grid item md={12}>
             {renderEncryptPasswordSection()}
