@@ -29,7 +29,7 @@ const AddProcessDialog = ({
     >
       <DialogTitle>Add Process</DialogTitle>
       <DialogContent>
-        <DialogContentText>Please enter the process name.</DialogContentText>
+        <DialogContentText>Please enter the process name:</DialogContentText>
         <TextField
           autoFocus
           margin="dense"

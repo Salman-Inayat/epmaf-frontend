@@ -68,7 +68,7 @@ const SettingsTab = ({
           aria-label="basic tabs example"
         >
           <Tab label="Environment variables" {...a11yProps(0)} />
-          <Tab label="Passwords" {...a11yProps(1)} />
+          <Tab label="Environment Passwords" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>

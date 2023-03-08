@@ -98,9 +98,10 @@ function Settings() {
     });
   };
 
-  const handleCategorySave = async (data) => {
+  const handleCategorySave = async (category, data) => {
     try {
       await axiosInstance.put("/settings/update", {
+        category,
         data: JSON.stringify(data),
       });
 

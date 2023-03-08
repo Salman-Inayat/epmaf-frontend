@@ -89,7 +89,7 @@ const EnvironmentVariablesTab = ({
                     <Button
                       variant="contained"
                       onClick={() => {
-                        handleCategorySave(settings[key]);
+                        handleCategorySave(key, settings[key]);
                       }}
                     >
                       Save

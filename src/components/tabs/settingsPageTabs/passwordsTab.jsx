@@ -32,7 +32,7 @@ const PasswordsTab = ({
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Title</TableCell>
+                <TableCell>Password Category</TableCell>
                 <TableCell align="center">Password Encrypted</TableCell>
                 <TableCell align="left">Last Encryption Date/Time</TableCell>
                 <TableCell align="left">File Name</TableCell>
@@ -160,9 +160,11 @@ const PasswordsTab = ({
         "/settings/generate-initial-encryption-keys"
       );
 
-      console.log({ response });
-
-      toast.success("Generating encryption keys");
+      toast.success("Encryption Keys Generated Successfully!", {
+        style: {
+          fontFamily: `"Roboto","Helvetica","Arial",sans-serif`,
+        },
+      });
     } catch (error) {
       console.error({ error });
     }

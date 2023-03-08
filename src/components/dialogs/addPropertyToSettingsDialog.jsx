@@ -23,7 +23,7 @@ const AddPropertyToSettingsDialog = ({
       <DialogTitle id="form-dialog-title">Add a New Variable</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          To add a new variable, enter the variable name and its value below.
+          To add a new variable, enter the variable name and its value below:
         </DialogContentText>
         <TextField
           margin="dense"
