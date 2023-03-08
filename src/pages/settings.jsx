@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 
 import { Container, Grid, Typography } from "@mui/material";
 import axiosInstance from "../axiosInstance";
@@ -19,11 +19,6 @@ function Settings() {
     precedent: "",
     key: "",
     value: "",
-  });
-
-  const [applicationIcon, setApplicationIcon] = useState({
-    file: null,
-    url: null,
   });
 
   const [encryptedPasswords, setEncryptedPasswords] = useState([]);
@@ -88,13 +83,6 @@ function Settings() {
     setEditMode({
       category,
       mode: mode,
-    });
-  };
-
-  const handleSetApplicationIcon = (file, url) => {
-    setApplicationIcon({
-      file,
-      url,
     });
   };
 
@@ -222,8 +210,6 @@ function Settings() {
             handleAddNewProperty={handleAddNewProperty}
             handleCategorySave={handleCategorySave}
             fetchSettings={fetchSettings}
-            applicationIcon={applicationIcon}
-            handleSetApplicationIcon={handleSetApplicationIcon}
             handleSetSettings={handleSetSettings}
             settings={settings}
             encryptPasswords={encryptPasswords}

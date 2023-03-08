@@ -1,16 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Grid, Button, Box, CardContent, Typography } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { useNavigate, Link } from "react-router-dom";
 
 import { Home, Settings } from "@mui/icons-material";
 
-import { Context } from "../App";
-
 const Layout = ({ children }) => {
   const navigate = useNavigate();
-
-  const { appIcon } = useContext(Context);
 
   return (
     <Grid container spacing={2} pb={3}>
@@ -47,15 +43,6 @@ const Layout = ({ children }) => {
             gap: "1rem",
           }}
         >
-          <img
-            src={appIcon}
-            alt="logo"
-            style={{
-              width: 50,
-              height: 50,
-              borderRadius: 10,
-            }}
-          />
           <Typography variant="h5">EPMCAF</Typography>
         </Box>
         <Button

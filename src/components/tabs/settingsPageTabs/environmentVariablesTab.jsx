@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   Grid,
   Stack,
@@ -8,8 +8,6 @@ import {
   Container,
 } from "@mui/material";
 import axiosInstance from "../../../axiosInstance";
-
-import { Context } from "../../../App";
 
 import AddPropertyToSettingsDialog from "../../dialogs/addPropertyToSettingsDialog";
 
@@ -22,15 +20,10 @@ const EnvironmentVariablesTab = ({
   addProperty,
   setAddProperty,
 
-  applicationIcon,
-  handleSetApplicationIcon,
-
   handleSetSettings,
   fetchSettings,
   handleCategorySave,
 }) => {
-  const { updateAppIcon } = useContext(Context);
-
   const handleAddNewProperty = async () => {
     try {
       await axiosInstance.put("/settings/add-property", {
@@ -173,48 +166,6 @@ const EnvironmentVariablesTab = ({
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={12} my={3}>
-        <Stack direction="row" spacing={2} justifyContent="space-between">
-          <Typography variant="h5">Logo</Typography>
-          <Button variant="contained" component="label">
-            Upload logo
-            <input
-              hidden
-              accept="image/*"
-              multiple
-              type="file"
-              onChange={(e) => {
-                handleSetApplicationIcon(
-                  e.target.files[0],
-                  URL.createObjectURL(e.target.files[0])
-                );
-              }}
-            />
-          </Button>
-        </Stack>
-        {applicationIcon?.url && (
-          <Stack
-            direction="column"
-            spacing={2}
-            mt={2}
-            justifyContent="center"
-            alignItems="center"
-          >
-            <img
-              src={applicationIcon.url}
-              alt="application icon"
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: 10,
-              }}
-            />
-            <Button variant="contained" onClick={updateApplicationIcon}>
-              Save
-            </Button>
-          </Stack>
-        )}
-      </Grid>
       <Grid item xs={12} md={12}>
         <Grid container spacing={5}>
           {renderSettingsByCategory()}
