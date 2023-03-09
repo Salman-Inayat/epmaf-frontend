@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import EnvironmentVariablesTab from "./environmentVariablesTab";
 import PasswordsTab from "./passwordsTab";
+import AppSettingsTab from "./appSettingsTab";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -69,6 +70,7 @@ const SettingsTab = ({
         >
           <Tab label="Environment variables" {...a11yProps(0)} />
           <Tab label="Environment Passwords" {...a11yProps(1)} />
+          <Tab label="App settings" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -93,6 +95,9 @@ const SettingsTab = ({
           handleSetEncryptPassword={handleSetEncryptPassword}
           loading={loading}
         />
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <AppSettingsTab />
       </TabPanel>
     </Box>
   );

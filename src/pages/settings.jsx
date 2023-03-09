@@ -173,12 +173,20 @@ function Settings() {
         }
       );
 
-      toast.success("Password encrypted successfully");
+      toast.success("Password encrypted successfully", {
+        style: {
+          fontFamily: `"Roboto","Helvetica","Arial",sans-serif`,
+        },
+      });
 
       fetchEncryptedPasswords();
     } catch (error) {
       console.log(error);
-      toast.error("There was an error encrypting the password");
+      toast.error("There was an error encrypting the password", {
+        style: {
+          fontFamily: `"Roboto","Helvetica","Arial",sans-serif`,
+        },
+      });
     } finally {
       setLoading(false);
       setEncryptPasswords({
