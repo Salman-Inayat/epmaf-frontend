@@ -45,12 +45,12 @@ const ProcessesTable = ({
             <TableRow>
               <TableCell>
                 <Typography variant="body1" fontWeight={600}>
-                  No
+                  #
                 </Typography>
               </TableCell>
               <TableCell>
                 <Typography variant="body1" fontWeight={600}>
-                  Title
+                  Process Name
                 </Typography>
               </TableCell>
               <TableCell align="center">

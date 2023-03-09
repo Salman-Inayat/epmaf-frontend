@@ -46,12 +46,26 @@ function Processes() {
   const handleProcessNameChange = (value) => {
     let newValue = value.replace(" ", "_");
 
-    // the process name should not exceed 56 characters
+    // only allow alpha numeric characters, underscores and hyphens
+    const alphanumericPattern = /^[a-zA-Z0-9_-]+$/;
+
+    if (newValue.length > 0 && !alphanumericPattern.test(newValue)) {
+      setAddProcess({
+        ...addProcess,
+        title: newValue,
+        error:
+          "The process name entered above must only contain alpha numeric characters, underscores and hyphens!",
+      });
+
+      return;
+    }
+
     if (newValue.length > 56) {
       setAddProcess({
         ...addProcess,
         title: newValue.slice(0, 56),
-        error: "Process name should not exceed 56 characters",
+        error:
+          "The process name entered above must not exceed 56 characters in length!",
       });
       return;
     } else {
@@ -66,12 +80,26 @@ function Processes() {
   const handleEditProcessNameChange = (value) => {
     let newValue = value.replace(" ", "_");
 
-    // the process name should not exceed 56 characters
+    // only allow alpha numeric characters, underscores and hyphens
+    const alphanumericPattern = /^[a-zA-Z0-9_-]+$/;
+
+    if (newValue.length > 0 && !alphanumericPattern.test(newValue)) {
+      setEditProcess({
+        ...editProcess,
+        newTitle: newValue,
+        error:
+          "The process name entered above must only contain alpha numeric characters, underscores and hyphens!",
+      });
+
+      return;
+    }
+
     if (newValue.length > 56) {
       setEditProcess({
         ...editProcess,
         newTitle: newValue.slice(0, 56),
-        error: "Process name should not exceed 56 characters",
+        error:
+          "The process name entered above must not exceed 56 characters in length!",
       });
       return;
     } else {
@@ -223,7 +251,7 @@ function Processes() {
             justifyContent="space-between"
           >
             <Typography variant="h6" component="h1">
-              Processes
+              Process Management
             </Typography>
             <Button
               variant="contained"

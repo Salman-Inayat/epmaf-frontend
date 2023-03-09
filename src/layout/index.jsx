@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Grid, Button, Box, CardContent, Typography } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { useNavigate, Link } from "react-router-dom";
 
 import { Home, Settings } from "@mui/icons-material";
 
+import { Context } from "../App";
+
 const Layout = ({ children }) => {
   const navigate = useNavigate();
+
+  const { appNameSettings } = useContext(Context);
+
+  console.log({ appNameSettings });
 
   return (
     <Grid container spacing={2} pb={3}>
@@ -43,7 +49,14 @@ const Layout = ({ children }) => {
             gap: "1rem",
           }}
         >
-          <Typography variant="h5">EPMCAF</Typography>
+          <Typography
+            sx={{
+              fontSize: appNameSettings.fontSize,
+              color: appNameSettings.fontColor,
+            }}
+          >
+            {appNameSettings.applicationName}
+          </Typography>
         </Box>
         <Button
           onClick={() => {

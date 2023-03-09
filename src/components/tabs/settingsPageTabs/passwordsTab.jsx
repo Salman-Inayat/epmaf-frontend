@@ -67,7 +67,7 @@ const PasswordsTab = ({
                   }}
                 >
                   <TableCell component="th" scope="row" align="center">
-                    No encrypted passwords present
+                    No encrypted passwords found.
                   </TableCell>
                 </TableRow>
               )}
