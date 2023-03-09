@@ -12,8 +12,8 @@ import {
   InputLabel,
 } from "@mui/material";
 import { HexColorPicker } from "react-colorful";
-import axiosInstance from "../../../axiosInstance";
 import { Context } from "../../../App";
+import toast from "react-hot-toast";
 
 function AppSettingsTab() {
   const { updateAppNameSettings, appNameSettings } = useContext(Context);
@@ -22,6 +22,7 @@ function AppSettingsTab() {
     applicationName: appNameSettings.applicationName,
     applicationNameFontSize: appNameSettings.fontSize,
     applicationNameFontColor: appNameSettings.fontColor,
+    error: "",
   });
 
   const handleAppSettings = (e) => {
@@ -29,6 +30,16 @@ function AppSettingsTab() {
   };
 
   const saveAppSettings = async () => {
+    if (appSettings.applicationName === "") {
+      toast.error("Please enter a name for the application!", {
+        style: {
+          fontFamily: `"Roboto","Helvetica","Arial",sans-serif`,
+        },
+      });
+
+      return;
+    }
+
     updateAppNameSettings(appSettings);
   };
 
@@ -43,6 +54,7 @@ function AppSettingsTab() {
               id="outlined-basic"
               variant="outlined"
               placeholder="Enter New Application Name"
+              label="Application Name"
               value={appSettings.applicationName}
               onChange={handleAppSettings}
               name="applicationName"
