@@ -6,6 +6,7 @@ import {
   Button,
   TextField,
   Container,
+  Divider,
 } from "@mui/material";
 import axiosInstance from "../../../axiosInstance";
 
@@ -77,43 +78,45 @@ const EnvironmentVariablesTab = ({
             <Grid item xs={12} md={12}>
               <Stack direction="row" spacing={2} justifyContent="space-between">
                 <Typography variant="h5">{key}</Typography>
-                <Stack direction="row" spacing={2} justifyContent="flex-end">
-                  {editMode?.category === key && editMode?.mode ? (
+                {!key.includes("Other Global Variables") && (
+                  <Stack direction="row" spacing={2} justifyContent="flex-end">
+                    {editMode?.category === key && editMode?.mode ? (
+                      <Button
+                        variant="contained"
+                        onClick={() => {
+                          handleCategorySave(key, settings[key]);
+                        }}
+                      >
+                        Save
+                      </Button>
+                    ) : null}
                     <Button
                       variant="contained"
                       onClick={() => {
-                        handleCategorySave(key, settings[key]);
+                        handleSetEditMode(key, !editMode.mode);
                       }}
                     >
-                      Save
+                      {editMode?.category === key && editMode?.mode
+                        ? "Cancel"
+                        : "Edit"}
                     </Button>
-                  ) : null}
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      handleSetEditMode(key, !editMode.mode);
-                    }}
-                  >
-                    {editMode?.category === key && editMode?.mode
-                      ? "Cancel"
-                      : "Edit"}
-                  </Button>
-                  {!editMode?.mode && (
-                    <Button
-                      variant="contained"
-                      onClick={() => {
-                        setAddProperty({
-                          ...addProperty,
-                          category: key,
-                          mode: !addProperty.mode,
-                          precedent: Object.keys(settings[key]).pop(),
-                        });
-                      }}
-                    >
-                      Add
-                    </Button>
-                  )}
-                </Stack>
+                    {!editMode?.mode && (
+                      <Button
+                        variant="contained"
+                        onClick={() => {
+                          setAddProperty({
+                            ...addProperty,
+                            category: key,
+                            mode: !addProperty.mode,
+                            precedent: Object.keys(settings[key]).pop(),
+                          });
+                        }}
+                      >
+                        Add
+                      </Button>
+                    )}
+                  </Stack>
+                )}
               </Stack>
             </Grid>
             <Grid item xs={12} md={12}>
@@ -122,6 +125,12 @@ const EnvironmentVariablesTab = ({
               </Grid>
             </Grid>
           </Grid>
+
+          <Divider
+            sx={{
+              marginTop: "2rem",
+            }}
+          />
         </Grid>
       );
     });

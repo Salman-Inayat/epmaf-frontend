@@ -27,7 +27,7 @@ const AddProcessDialog = ({
         },
       }}
     >
-      <DialogTitle>Add Process</DialogTitle>
+      <DialogTitle>Add New Process</DialogTitle>
       <DialogContent>
         <DialogContentText>Enter a new process name below:</DialogContentText>
         <TextField

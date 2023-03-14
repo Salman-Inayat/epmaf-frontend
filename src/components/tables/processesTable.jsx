@@ -22,7 +22,7 @@ const ProcessesTable = ({
   handleSetProcessEdit,
 }) => {
   const navigate = useNavigate();
-  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
 
   const emptyRows =
@@ -144,13 +144,14 @@ const ProcessesTable = ({
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[20, 40, 80]}
+        rowsPerPageOptions={[10, 20, 30, 40, 50]}
         component="div"
         count={processes.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage={"Processes Displayed/Page:"}
       />
     </Paper>
   );

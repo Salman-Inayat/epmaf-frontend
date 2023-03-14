@@ -54,7 +54,7 @@ function AppSettingsTab() {
               id="outlined-basic"
               variant="outlined"
               placeholder="Enter New Application Name"
-              label="Application Name"
+              label="Application Header"
               value={appSettings.applicationName}
               onChange={handleAppSettings}
               name="applicationName"
@@ -73,17 +73,13 @@ function AppSettingsTab() {
                 name="applicationNameFontSize"
                 label="Font Size"
               >
-                <MenuItem value={18}>18</MenuItem>
                 <MenuItem value={20}>20</MenuItem>
-                <MenuItem value={22}>22</MenuItem>
-                <MenuItem value={24}>24</MenuItem>
-                <MenuItem value={26}>26</MenuItem>
-                <MenuItem value={28}>28</MenuItem>
+                <MenuItem value={25}>25</MenuItem>
                 <MenuItem value={30}>30</MenuItem>
-                <MenuItem value={32}>32</MenuItem>
-                <MenuItem value={34}>34</MenuItem>
-                <MenuItem value={36}>36</MenuItem>
-                <MenuItem value={38}>38</MenuItem>
+                <MenuItem value={35}>35</MenuItem>
+                <MenuItem value={40}>40</MenuItem>
+                <MenuItem value={45}>45</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
               </Select>
             </FormControl>
           </Grid>

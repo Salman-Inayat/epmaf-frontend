@@ -26,9 +26,9 @@ const EditProcessDialog = ({
         },
       }}
     >
-      <DialogTitle>Edit Process</DialogTitle>
+      <DialogTitle>Edit Process Name</DialogTitle>
       <DialogContent>
-        <DialogContentText>Please enter the process name.</DialogContentText>
+        <DialogContentText>Enter the new process name below:</DialogContentText>
         <TextField
           autoFocus
           margin="dense"

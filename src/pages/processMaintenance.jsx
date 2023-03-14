@@ -54,7 +54,7 @@ function Processes() {
         ...addProcess,
         title: newValue,
         error:
-          "The process name entered above must only contain alpha numeric characters, underscores and hyphens!",
+          "TThe process name entered above must contain only alphabets, numbers, underscores, and hyphens!",
       });
 
       return;
@@ -65,7 +65,7 @@ function Processes() {
         ...addProcess,
         title: newValue.slice(0, 56),
         error:
-          "The process name entered above must not exceed 56 characters in length!",
+          "The process name entered above must contain only alphabets, numbers, underscores, and hyphens!",
       });
       return;
     } else {
@@ -88,7 +88,7 @@ function Processes() {
         ...editProcess,
         newTitle: newValue,
         error:
-          "The process name entered above must only contain alpha numeric characters, underscores and hyphens!",
+          "The process name entered above must contain only alphabets, numbers, underscores, and hyphens!",
       });
 
       return;
